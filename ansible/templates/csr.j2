@@ -1,0 +1,20 @@
+{% for item in interfaces %}
+interface {{item.interface}}
+{% if item.ipaddr is not none %}
+  ip address {{item.ipaddr}} 255.255.255.0
+{% endif %}
+{% if item.description is not none %}
+  description "{{item.description}}"
+{% endif %}
+{% if item.state == "up" %}
+  no shutdown
+{% else %}
+  shutdown
+{% endif %}
+!
+{% endfor %}
+router bgp {{bgp.asn}}
+  bgp router-id {{bgp.rid}}
+{% for peer in bgp.neighbors %}
+  neighbor {{ peer.ipaddr }} remote-as {{ peer.remote_asn }}
+{% endfor %}

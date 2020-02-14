@@ -1,0 +1,14 @@
+- ping:
+    _name: ping1
+    _kwargs:
+      destination: 10.10.13.1
+    success:
+      packet_loss: 0
+    _mode: strict
+
+    _name: ping2
+    _kwargs:
+      destination: 10.10.23.2
+    success:
+      packet_loss: 0
+    _mode: strict

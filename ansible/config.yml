@@ -1,0 +1,56 @@
+---
+- name: Configure CSRs
+  hosts: csr
+  gather_facts: no
+  vars:
+    val_dir: "{{ playbook_dir }}/validate"
+
+  tasks:
+    - name: Generate Configuration Files
+      template: src=csr.j2 dest=configs/{{inventory_hostname}}
+      tags: gen
+
+    - name: Configure Interfaces & BGP
+      ios_config:
+        src=csr.j2
+      tags: config
+
+    - name: Verify L2 Reachability
+      napalm_validate:
+        dev_os=ios
+        hostname={{ inventory_hostname }}
+        username={{ ansible_user }}
+        password={{ ansible_password }}
+        validation_file="{{ val_dir }}/{{ inventory_hostname }}_l2.yml"
+      register: val_l2
+      tags: verify_l2
+    - name: Print L2 Report
+      debug: var=val_l2.compliance_report
+      tags: verify_l2
+
+    - name: Verify BGP Neighbors
+      napalm_validate:
+        dev_os=ios
+        hostname={{ inventory_hostname }}
+        username={{ ansible_user }}
+        password={{ ansible_password }}
+        validation_file="{{ val_dir }}/{{ inventory_hostname }}_bgp.yml"
+      register: val_bgp
+      tags: verify_bgp
+    - name: Print BGP Report
+      debug: var=val_bgp.compliance_report
+      tags: verify_bgp
+
+    - name: Get BGP
+      napalm_get_facts:
+        dev_os=ios
+        hostname={{ inventory_hostname }}
+        username={{ ansible_user }}
+        password={{ ansible_password }}
+        filter='bgp_neighbors'
+      register: bgp_peers
+      tags: ['debug_bgp', 'never']
+    - name: Debug BGP neighbors
+      debug:
+        var: bgp_peers
+      tags: ['debug_bgp', 'never']

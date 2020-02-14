@@ -1,0 +1,69 @@
+---
+
+csr1:
+  bgp:
+    asn: 65511
+    rid: 1.1.1.1
+    neighbors:
+      - ipaddr: 10.10.12.2
+        remote_asn: 65512
+      - ipaddr: 10.10.13.3
+        remote_asn: 65513
+  interfaces:
+    GigabitEthernet2:
+      ipaddr: 10.10.13.1
+      description: CSR3 ge2
+      state: up
+    GigabitEthernet3:
+      ipaddr: 
+      description: 
+      state: down
+    GigabitEthernet4: 
+      ipaddr: 10.10.12.1
+      description: CSR2 ge4
+      state: up
+csr2:
+  bgp:
+    asn: 65512
+    rid: 2.2.2.2
+    neighbors:
+      - ipaddr: 10.10.12.1
+        remote_asn: 65511
+      - ipaddr: 10.10.23.3
+        remote_asn: 65513
+  interfaces:
+    GigabitEthernet2:
+      ipaddr: 
+      description:
+      state: down
+    GigabitEthernet3: 
+      ipaddr: 10.10.23.2
+      description: CSR3 ge3
+      state: up
+    GigabitEthernet4:
+      ipaddr: 10.10.12.2
+      description: CSR1 ge4
+      state: up
+
+csr3:
+  bgp:
+    asn: 65513
+    rid: 3.3.3.3
+    neighbors:
+      - ipaddr: 10.10.13.1
+        remote_asn: 65511
+      - ipaddr: 10.10.23.2
+        remote_asn: 65512
+  interfaces:
+    GigabitEthernet2:
+      ipaddr: 10.10.13.3
+      description: CSR1 ge2
+      state: up
+    GigabitEthernet3:
+      ipaddr: 10.10.23.3
+      description: CSR2 ge3
+      state: up
+    GigabitEthernet4:
+      ipaddr: 
+      description: 
+      state: down

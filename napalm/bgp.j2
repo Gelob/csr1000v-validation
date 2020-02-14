@@ -1,0 +1,7 @@
+{% set node = csr1 -%}
+router bgp {{node.bgp.asn}}
+  bgp router-id {{node.bgp.rid}}
+!
+{% for peer in node.bgp.neighbors -%}
+neighbor {{ peer.ipaddr }} remote-as {{ peer.remote_asn }}
+{% endfor %}

@@ -1,0 +1,17 @@
+{% set node = csr1 -%}
+{% for int, int_details in node.interfaces.items() -%}
+interface {{int}}
+{%- if int_details.ipaddr is not none %}
+  ip address {{int_details.ipaddr}} 255.255.255.0
+{%- endif %}
+{%- if int_details.description is not none %}
+  description "{{int_details.description}}"
+{%- endif %}
+{%- if int_details.state == "up" %}
+  no shutdown
+{%- else %}
+  shutdown
+{%- endif %}
+!
+{% endfor -%}
+end
